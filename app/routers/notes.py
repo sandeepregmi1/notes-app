@@ -44,7 +44,9 @@ def get_notes(
 ):
 
     notes = db.query(models.Note)\
-        .filter(models.Note.owner_id == user_id)\
+        .filter(models.Note.owner_id == user_id,
+                models.Note.is_deleted == False
+        )\
         .limit(limit)\
         .offset(skip)\
         .all()
@@ -66,19 +68,24 @@ def get_note_by_id(
     return note
 
 # DELETE NOTE
-@router.delete("/{note_id}")    
+@router.delete("/{note_id}")
 def delete_note(
     note_id: int,
     db: Session = Depends(get_db),
     user_id: int = Depends(get_current_user)
 ):
+
     note = get_user_note(db, note_id, user_id)
+
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
 
-    db.delete(note)
+    note.is_deleted = True
     db.commit()
-    return {"message": "Note deleted successfully"}
+
+    return {"message": "Note deleted (soft delete)"}
+
+
 
 # UPDATE NOTE
 @router.put("/{note_id}", response_model=schemas.NoteResponse)
@@ -123,3 +130,24 @@ def patch_note(
     db.refresh(note)
 
     return note
+
+@router.put("/restore/{note_id}")
+def restore_note(
+    note_id: int,
+    db: Session = Depends(get_db),
+    user_id: int = Depends(get_current_user)
+):
+
+    note = db.query(models.Note).filter(
+        models.Note.id == note_id,
+        models.Note.owner_id == user_id
+    ).first()
+
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
+
+    note.is_deleted = False
+    db.commit()
+    db.refresh(note)
+
+    return {"message": "Note restored successfully"}

@@ -1,5 +1,5 @@
 # /home/sandeep/Projects/notes_app/app/models.py
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -24,3 +24,5 @@ class Note(Base):
     owner_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="notes")
+
+    is_deleted = Column(Boolean, default=False, nullable=False)  # Soft delete flag

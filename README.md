@@ -65,6 +65,46 @@ Full Update (PUT /notes/{id})
 Partial Update (PATCH /notes/{id})
 🗑️ Implement Delete Notes (DELETE /notes/{id}) with proper authorization checks
 
+# 🗑️ Soft Delete System
+ Soft delete notes instead of permanent deletion
+ Restore deleted notes
+ Database cleanup for NULL values (is_deleted)
+ Secure filtering of active notes only
+📌 Soft Delete Behavior
+
+Instead of permanently deleting notes, the system marks them as deleted:
+
+```bash
+
+is_deleted = True  # when deleted
+is_deleted = False # when restored
+
+```
+# 🔄 Restore Feature
+
+Deleted notes can be restored using:
+
+PUT /notes/restore/{note_id}
+🧠 Data Safety Improvement
+Prevents accidental data loss
+Enables undo functionality
+Keeps user data safe and recoverable
+⚙️ Database Fix Applied
+
+To ensure consistency:
+
+# UPDATE notes SET is_deleted = false WHERE is_deleted IS NULL;
+🚀 API Updates
+Method	Endpoint	Description
+DELETE	/notes/{id}	Soft delete note
+PUT	/notes/restore/{id}	Restore note
+GET	/notes/	Returns only active notes
+```bash
+- Soft delete architecture (used in real SaaS apps)
+- Data recovery patterns
+- PostgreSQL data cleanup strategies
+- Advanced filtering with SQLAlchemy
+```
 ---
 
 ## 📄 License
