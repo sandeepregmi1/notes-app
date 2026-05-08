@@ -59,11 +59,11 @@ You can access the interactive Swagger documentation at `http://127.0.0.1:8000/d
 ---
 
 ## 📈 Roadmap (Phase 2 & Beyond)
-- [ ] Update and Delete functionality for notes.
-- [ ] Search and Filter notes by title or content.
-- [ ] User Profile management.
-- [ ] Unit and Integration tests.
-- [ ] Dockerization for easy deployment.
+🔥 Implement Get Note by ID (GET /notes/{id}) for retrieving individual notes
+✏️ Enhance Update Notes functionality with both:
+Full Update (PUT /notes/{id})
+Partial Update (PATCH /notes/{id})
+🗑️ Implement Delete Notes (DELETE /notes/{id}) with proper authorization checks
 
 ---
 

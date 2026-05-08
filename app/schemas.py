@@ -1,5 +1,6 @@
 # /home/sandeep/Projects/notes_app/app/schemas.py
 from pydantic import BaseModel
+from typing import Optional
 
 
 # USER
@@ -14,7 +15,22 @@ class UserLogin(BaseModel):
     
 
 
-# NOTE
-class NoteCreate(BaseModel):
+class NoteBase(BaseModel):
     title: str
     content: str
+
+
+class NoteCreate(NoteBase):
+    pass
+
+
+class NoteResponse(NoteBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class NoteUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
